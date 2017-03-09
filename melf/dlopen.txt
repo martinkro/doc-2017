@@ -1,0 +1,19 @@
+==Android 4.4.4_r1 linker.cpp
+
+dlopen()
+do_dlopen()
+    soinfo* si = find_library(name)
+    si->CallConstructors()
+        find_loaded_library(needed);    dynamic  Elf32_Dyn* d; d->d_tag = DT_NEEDED
+        call_init_function  CallFunction(DT_INIT)
+        call_init_array_function()  CallArray(DT_INIT_ARRAY);
+        
+soinfo* find_library(const char* name){
+    find_library_internal();
+}
+
+find_library_internal(const char* name){
+    si = find_loaded_library(name);
+    load_library(name)
+    soinfo_link_image(si);
+}

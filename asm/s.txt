@@ -1,0 +1,52 @@
+1     .file  "hello.c"
+ 2     .text
+ 3 .globl add
+ 4     .type  add, @function
+ 5 add:
+ 6     pushl  %ebp
+ 7     movl   %esp, %ebp
+ 8     movl   12(%ebp), %edx
+ 9     movl   8(%ebp), %eax
+10     addl   %edx, %eax
+11     popl   %ebp
+12     ret
+13     .size  add, .-add
+14     .section   .rodata
+15 .LC0:
+16     .string    "a+b=%d/n"
+17 .LC1:
+18     .string    "Hello World!"
+19     .text
+20 .globl main
+21     .type  main, @function
+22 main:
+23     leal   4(%esp), %ecx
+24     andl   $-16, %esp
+25     pushl  -4(%ecx)
+26     pushl  %ebp
+27     movl   %esp, %ebp
+28     pushl  %ecx
+29     subl   $36, %esp
+30     movl   $3, -8(%ebp)
+31     movl   $4, -12(%ebp)
+32     movl   -12(%ebp), %eax
+33     movl   %eax, 4(%esp)
+34     movl   -8(%ebp), %eax
+35     movl   %eax, (%esp)
+36     call   add
+37     movl   %eax, -16(%ebp)
+38     movl   -16(%ebp), %eax
+39     movl   %eax, 4(%esp)
+40     movl   $.LC0, (%esp)
+41     call   printf
+42     movl   $.LC1, (%esp)
+43     call   puts
+44     movl   $0, %eax
+45     addl   $36, %esp
+46     popl   %ecx
+47     popl   %ebp
+48     leal   -4(%ecx), %esp
+49     ret
+50     .size  main, .-main
+51     .ident "GCC: (Ubuntu 4.3.2-1ubuntu12) 4.3.2"
+52     .section   .note.GNU-stack,"",@progbits
