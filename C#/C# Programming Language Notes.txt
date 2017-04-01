@@ -1,0 +1,152 @@
+## 特性 Attribute
+## 程序集
+## using 用法
+(1)直接引入命名空间:using System;
+(2)别名: using Zip = System.IO.Compression;
+(3)定义一个范围，在范围结束时处理对象
+当在某个代码段中使用了类的实例，而希望无论因为什么原因，只要离开了这个代码段就自动调用这个类实例的Dispose。要达到这样的目的，用try...catch来捕捉异常也是可以的，但用using也很方便。
+using (Class1 cls1 = new Class1(), cls2 = new Class1())
+{
+       // the code using cls1, cls2
+  
+} // call the Dispose on cls1 and cls2
+
+## where 泛型约束
+(1) where T : struct 限制类型参数T必须继承自System.ValueType
+(2) where T : class 限制类型参数T必须是引用类型，也就是不能继承自System.ValueType
+(3) where T : new() 限制类型参数T必须有一个缺省的构造函数
+(4) where T : NameOfClass 限制类型参数T必须继承自某个类或实现某个接口。
+IEnumerable<IAttributeReflector> GetAttributes<T>() where T : Attribute;
+
+Property Constructor Visibility
+
+A property consists of 2 parts, a get and a set method, wrapped inside the property:
+class Car{
+    private string color;
+    public string Color{
+        get{return color;}
+        set{color=value;}
+    }
+}
+Another thing you should know about properties is the fact that only one method is required - either get or set, 
+the other is optional. This allows you to define read-only and write-only properties. Here is a better example 
+of why properties are useful:
+
+public string Color
+{
+    get 
+    {
+        return color.ToUpper(); 
+    }
+    set 
+    { 
+        if(value == "Red")
+            color = value; 
+        else
+            Console.WriteLine("This car can only be red!");
+    }
+}
+
+A constructor can call another constructor, which can come in handy in several situations. Here is an example:
+public Car()
+{
+    Console.WriteLine("Constructor with no parameters called!");
+}
+
+public Car(string color) : this()
+{
+    this.color = color;
+    Console.WriteLine("Constructor with color parameter called!");
+}
+
+public Car(string color) : this()
+{
+    this.color = color;
+    Console.WriteLine("Constructor with color parameter called!");
+}
+
+public Car(string param1, string param2) : this(param1)
+{
+
+}
+
+## Destructors
+Since C# is garbage collected, meaing that the framework will free the objects that you no longer use, 
+there may be times where you need to do some manual cleanup. A destructor, a method called once an object 
+is disposed, can be used to cleanup resources used by the object. Destructors doesn't look very much like 
+other methods in C#. Here is an example of a destructor for our Car class:
+
+~Car() 
+{
+    Console.WriteLine("Out..");
+}
+
+## Visibility
+public - the member can be reached from anywhere. This is the least restrictive visibility. Enums and interfaces are, by default, publicly visible. 
+protected - members can only be reached from within the same class, or from a class which inherits from this class. 
+internal - members can be reached from within the same project only. 
+protected internal - the same as internal, except that also classes which inherits from this class can reach it members, even from another project. 
+private - can only be reached by members from the same class. This is the most restrictive visibility. Classes and structs are by default set to private visibility. 
+
+## Inheritance
+
+public class Animal
+{
+    public virtual void Greet()
+    {
+        Console.WriteLine("Hello, I'm some sort of animal!");
+    }
+}
+
+public class Dog : Animal
+{
+    public override void Greet()
+    {
+        base.Greet();
+        Console.WriteLine("Hello, I'm a dog!");
+    }
+}
+Multiple inheritance, as it's called, is not supported by C#.
+
+## Abstract classes
+Abstract methods are only allowed within abstract classes.
+abstract class FourLeggedAnimal
+{
+    public abstract string Describe();
+}
+
+## var keyword
+var关键字是C# 3.0开始新增的特性，称为推断类型 .
+
+## using 
+引用命名空间
+创建命名空间别名 using alias = namespace | type;
+强制资源清理:清理非托管资源，不受GC控制的资源。Using结束后会隐式的调用Disposable方法
+
+## 比较C#中的readonly与const
+ C#中有两种常量类型，分别为readonly(运行时常量)与const(编译时常量)，本文将就这两种类型的不同特性进行比较并说明各自的适用场景。
+
+工作原理
+    readonly为运行时常量，程序运行时进行赋值，赋值完成后便无法更改，因此也有人称其为只读变量。
+    const为编译时常量，程序编译时将对常量值进行解析，并将所有常量引用替换为相应值。
+    下面声明两个常量：
+
+ public static readonly int A = 2; //A为运行时常量
+public const int B = 3; //B为编译时常量
+    下面的表达式：
+
+int C = A + B;
+    经过编译后与下面的形式等价：
+
+int C = A + 3;
+    可以看到，其中的const常量B被替换成字面量3，而readonly常量A则保持引用方式。
+
+声明及初始化
+    readonly常量只能声明为类字段，支持实例类型或静态类型，可以在声明的同时初始化或者在构造函数中进行初始化，初始化完成后便无法更改。
+    const常量除了可以声明为类字段之外，还可以声明为方法中的局部常量，默认为静态类型(无需用static修饰，否则将导致编译错误)，但必须在声明的同时完成初始化。
+## sealed 密封类
+当对一个类应用 sealed 修饰符时，此修饰符会阻止其他类从该类继承。在下面的示例中，类 B 从类 A 继承，但是任何类都不能从类 B 继承。
+
+## as & is
+is : 检查一个对象是否兼容于其他指定的类型,并返回一个Bool值,永远不会抛出异常
+as:与强制类型转换是一样的,但是永远不会抛出异常,即如果转换不成功,会返回null
