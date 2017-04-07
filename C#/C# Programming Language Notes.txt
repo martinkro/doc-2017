@@ -1,3 +1,8 @@
+## Variables
+
+## 问号运算符
+    int?x = null;     // 定义可空类型变量
+    int?y = x??1000;  // null合并运算符，如果x为null,预设赋值1000
 ## 特性 Attribute
 ## 程序集
 ## using 用法
